@@ -1,41 +1,59 @@
 ﻿#include <iostream>
-#include <vector>
 #include <cmath>
-#include <algorithm>
+#include <string>
+#include <vector>
+#include <cstring>
+#include <stack>
+#include <list>
+
 using namespace std;
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};
 class Solution {
 public:
-    int count;
-    int tar;
-    int threeSumClosest(vector<int>& nums, int target) {
-        count=0;
-        tar=999999;
-        int c=0;
-        int t=99999;
-        sort(nums.begin(),nums.end());
-        for(int i=0;i<nums.size()-1;++i){
-            int j=i+1;
-            int k=nums.size()-1;
-            while(j<k){
-                c=nums[i]+nums[j]+nums[k];
-                t=target-c;
-                if(t>0) j++;
-                else if(t==0) break;
-                else k--;
-                if(tar>abs(t)){
-                    count=c;
-                    tar=abs(t);
-                }
-                }
+    ListNode* swapPairs(ListNode* head) {
+        if(head==NULL) return NULL;
+        else if(head->next==NULL) return head;
+        ListNode *ppre=NULL;
+        ListNode *p=head;
+        ListNode *pnext=p->next;
+        head=pnext;
+        while(p&&pnext!=NULL){
+            if(ppre!=NULL){
+                ppre->next=pnext;
+                ListNode *tmp=pnext->next;
+                pnext->next=p;
+                p->next=tmp;
+                ppre=p;
+                p=tmp;
+                if(p!=NULL)
+                    pnext=p->next;
+                else pnext=NULL;
+
+            }
+            else{
+                ListNode *tmp=pnext->next;
+                pnext->next=p;
+                p->next=tmp;
+                ppre=p;
+                p=tmp;
+                if(p!=NULL)
+                    pnext=p->next;
+                else pnext=NULL;
+            }
         }
-        return count;
+        return head;
     }
 };
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
+    ListNode *p=new ListNode(1);
+    p->next=new ListNode(2);
+    p->next->next=new ListNode(3);
+    p->next->next->next=new ListNode(4);
     Solution a;
-    vector<int> b{0,1,2};
-    int res=a.threeSumClosest(b,3);
-    cout << "Hello World!" << endl;
+    a.swapPairs(p);
     return 0;
 }
